@@ -12,7 +12,9 @@ const PORT = config.get('port') || 5000
 const start = async () => {
     try {
         await mongoose.connect(config.get('mongoUri'), {})
-        app.listen(PORT, () => console.log(`App has been started on ${PORT} port...`))
+        app.listen(PORT, () =>
+            console.log(`App has been started on ${PORT} port...`)
+        )
     } catch (error) {
         console.log('Server Error', error.message)
         process.exit(1)
@@ -20,4 +22,3 @@ const start = async () => {
 }
 
 start()
-

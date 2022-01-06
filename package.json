@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "server": "nodemon app.js"
+    "server": "nodemon app.js",
+    "client": "npm run start --prefix frontend",
+    "dev": "concurrently \" npm run server\" \" npm run client\""
   },
   "keywords": [
     "mern"
@@ -22,6 +24,7 @@
   },
   "devDependencies": {
     "concurrently": "^7.0.0",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "prettier": "2.5.1"
   }
 }
