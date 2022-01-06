@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
     Box,
     Button,
@@ -17,6 +17,7 @@ import {
 import useHttp from '../../hooks/useHttp'
 import AuthMessage from './authMessage/AuthMessage'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
+import AuthContext from '../../context/AuthContext'
 
 const Auth = () => {
     const {
@@ -27,6 +28,8 @@ const Auth = () => {
         successMessage,
         clearSuccessMessage,
     } = useHttp()
+
+    const auth = useContext(AuthContext)
 
     const [form, setForm] = useState({
         email: '',
@@ -98,7 +101,7 @@ const Auth = () => {
             const data = await request('/api/auth/login', 'POST', {
                 ...form,
             })
-            console.log(data)
+            auth.login(data.token, data.userId)
         } catch (error) {}
     }
 

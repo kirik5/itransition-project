@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Navigate } from 'react-router-dom'
 import Auth from '../components/auth/Auth'
 import Collection from '../components/collection/Collection'
 import AllCollections from '../components/allCollections/AllCollections'
@@ -8,8 +8,9 @@ const useRoutes = isAuthenticated => {
     if (isAuthenticated) {
         return (
             <>
-                <Route path="/all-collections" element={<AllCollections />} />
-                <Route path="/collection" element={<Collection />} />
+                <Route path="all-collections" element={<AllCollections />} />
+                <Route path="my-collection" element={<Collection />} />
+                <Route path="" element={<Navigate to={'/my-collection'} />} />
             </>
         )
     }
@@ -18,6 +19,7 @@ const useRoutes = isAuthenticated => {
         <>
             <Route path="" element={<Auth />} />
             <Route path="all-collections" element={<AllCollections />} />
+            <Route path="*" element={<Navigate to={'/'} />} />
         </>
     )
 }
