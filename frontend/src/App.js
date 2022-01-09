@@ -1,13 +1,14 @@
 import React from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import NoMatch from './components/noMatch/NoMatch'
 import Home from './components/home/Home'
 import useRoutes from './hooks/useRoutes'
 import useAuth from './hooks/useAuth'
 import AuthContext from './context/AuthContext'
+import Loader from './components/loader/Loader'
 
 const App = () => {
-    const { token, userId, login, logout } = useAuth()
+    const { token, userId, login, logout, ready } = useAuth()
     const isAuthenticated = !!token
     const routes = useRoutes(isAuthenticated)
 
@@ -21,12 +22,16 @@ const App = () => {
                 isAuthenticated,
             }}
         >
-            <Routes>
-                <Route path="/" element={<Home />}>
-                    {routes}
-                    <Route path="*" element={<NoMatch />} />
-                </Route>
-            </Routes>
+            {!ready ? (
+                <Loader />
+            ) : (
+                <Routes>
+                    <Route path="/" element={<Home />}>
+                        {routes}
+                        <Route path="*" element={<NoMatch />} />
+                    </Route>
+                </Routes>
+            )}
         </AuthContext.Provider>
     )
 }

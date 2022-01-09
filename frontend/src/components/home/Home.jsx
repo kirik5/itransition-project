@@ -1,24 +1,37 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Outlet } from 'react-router-dom'
-import { Box, Container } from '@mui/material'
+import { Box } from '@mui/material'
+import ButtonAppBar from '../appBar/ArrBar'
+import MenuDrawer from '../menuDrawer/MenuDrawer'
+import MenuList from '../menuList/MenuList'
 
 const Home = () => {
+    const [isDrawerOpen, setDrawerOpen] = useState(false)
+
+    const handleDrawerClose = () => {
+        setDrawerOpen(false)
+    }
+
+    const handleDrawerOpen = () => {
+        setDrawerOpen(true)
+    }
+
     return (
         <>
-            <Container maxWidth="lg">
-                <Box
-                    sx={{
-                        minHeight: '100vh',
-                        padding: '10px',
-                        boxSizing: 'border-box',
-                        display: 'flex',
-                        flexDirection: 'column',
-                    }}
-                >
-                    <div>Home page /</div>
-                    <Outlet />
-                </Box>
-            </Container>
+            <Box
+                sx={{
+                    minHeight: '100vh',
+                    boxSizing: 'border-box',
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
+            >
+                <ButtonAppBar onDrawerOpen={handleDrawerOpen} />
+                <Outlet />
+            </Box>
+            <MenuDrawer open={isDrawerOpen} onClose={handleDrawerClose}>
+                <MenuList onDrawerClose={handleDrawerClose} />
+            </MenuDrawer>
         </>
     )
 }

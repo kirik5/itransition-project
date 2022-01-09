@@ -186,21 +186,6 @@ const Auth = () => {
                                         'Введите минимум 6 символов!'}
                                 </Typography>
                             </FormControl>
-                            {/*<TextField*/}
-                            {/*    required*/}
-                            {/*    id="password-field"*/}
-                            {/*    label="password"*/}
-                            {/*    fullWidth*/}
-                            {/*    margin="dense"*/}
-                            {/*    value={form.password}*/}
-                            {/*    onChange={handleChangeField('password')}*/}
-                            {/*    error={errors.password}*/}
-                            {/*    helperText={*/}
-                            {/*        errors.password &&*/}
-                            {/*        'Введите минимум 6 символов!'*/}
-                            {/*    }*/}
-                            {/*    onBlur={handleBlur('password')}*/}
-                            {/*/>*/}
                         </CardContent>
                         <CardActions sx={{ padding: '16px' }}>
                             <Button
