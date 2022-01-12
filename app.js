@@ -4,7 +4,9 @@ const mongoose = require('mongoose')
 
 const app = express()
 
+app.use('/uploads', express.static(__dirname + '/uploads'))
 app.use(express.json())
+
 app.use('/api/auth', require('./routes/auth.routes'))
 app.use('/api/collections', require('./routes/collections.routes'))
 

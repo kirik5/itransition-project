@@ -16,6 +16,7 @@ import useHttp from '../../hooks/useHttp'
 import AuthContext from '../../context/AuthContext'
 import DeleteIcon from '@mui/icons-material/Delete'
 import IconButton from '@mui/material/IconButton'
+import ImageIcon from '@mui/icons-material/Image'
 
 const types = ['String', 'Boolean', 'Date', 'Integer']
 
@@ -27,8 +28,37 @@ const AddCollection = () => {
         theme: '',
         image: '',
     })
+    const [drag, setDrag] = useState(false)
 
-    const isButtonCreateDisabled = fieldsValues.name === ''
+    const handleDragStart = event => {
+        event.preventDefault()
+        setDrag(true)
+    }
+
+    const handleDragLeave = event => {
+        event.preventDefault()
+        setDrag(false)
+    }
+
+    const handleDrop = event => {
+        event.preventDefault()
+        const file = [...event.dataTransfer.files][0]
+        console.log(file)
+        console.log(file.type)
+        if (file.type === 'image/png' || file.type === 'image/jpeg') {
+            fieldsValues.image = file
+        }
+        setDrag(false)
+    }
+
+    const handleDeleteImage = () => {
+        setFieldsValues(prev => ({ ...prev, image: '' }))
+    }
+
+    const isButtonCreateDisabled =
+        fieldsValues.name === '' ||
+        fieldsValues.description === '' ||
+        fieldsValues.theme === ''
 
     const handleChangeFieldValue = name => event => {
         setFieldsValues(prev => ({ ...prev, [name]: event.target.value }))
@@ -98,11 +128,7 @@ const AddCollection = () => {
         return newTypes
     }
 
-    useEffect(() => {
-        console.log('component did update')
-    })
-
-    const { request } = useHttp()
+    const { request, requestImg } = useHttp()
 
     const auth = useContext(AuthContext)
 
@@ -121,20 +147,29 @@ const AddCollection = () => {
             }
         })
 
-        console.log(additionalFields)
+        console.log('---', fieldsValues)
+
+        const data = new FormData()
+        data.append('name', fieldsValues.name)
+        data.append('description', fieldsValues.description)
+        data.append('theme', fieldsValues.theme)
+        data.append('image', fieldsValues.image)
+        data.append(
+            'collectionschema',
+            JSON.stringify({ ...mainFields, ...additionalFields })
+        )
 
         try {
-            const data = await request(
+            const response = await requestImg(
                 '/api/collections/create',
                 'POST',
-                {
-                    ...fieldsValues,
-                    collectionschema: { ...mainFields, ...additionalFields },
-                },
+                data,
                 {
                     Authorization: `Bearer ${auth.token}`,
                 }
             )
+
+            console.log('response = ', response)
         } catch (error) {}
     }
 
@@ -158,53 +193,97 @@ const AddCollection = () => {
                 <Typography variant="h5" component="h2">
                     Создание коллекции
                 </Typography>
-                <TextField
-                    id="collection-name"
-                    label="Имя"
-                    variant="outlined"
-                    value={fieldsValues.name}
-                    onChange={handleChangeFieldValue('name')}
-                />
-                <TextField
-                    id="collection-description"
-                    label="Описание"
-                    variant="outlined"
-                    value={fieldsValues.description}
-                    onChange={handleChangeFieldValue('description')}
-                />
-                <FormControl fullWidth>
-                    <InputLabel id="theme">Тема</InputLabel>
-                    <Select
-                        labelId="theme"
-                        id="theme"
-                        label="theme"
-                        value={fieldsValues.theme}
-                        onChange={handleChangeFieldValue('theme')}
-                    >
-                        {collectionTypes
-                            ? collectionTypes.map(el => (
-                                  <MenuItem value={el} key={el}>
-                                      {el}
-                                  </MenuItem>
-                              ))
-                            : null}
-                    </Select>
-                </FormControl>
-                <TextField
-                    id="collection-image"
-                    label="Изображение"
-                    variant="outlined"
-                    value={fieldsValues.image}
-                    onChange={handleChangeFieldValue('image')}
-                />
-                <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={handleCreateCollection}
-                    disabled={isButtonCreateDisabled}
+                <Box
+                    component={'div'}
+                    sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                    }}
                 >
-                    Создать коллекцию
-                </Button>
+                    <TextField
+                        id="collection-name"
+                        label="Имя"
+                        variant="outlined"
+                        value={fieldsValues.name}
+                        onChange={handleChangeFieldValue('name')}
+                    />
+                    <TextField
+                        id="collection-description"
+                        label="Описание"
+                        variant="outlined"
+                        value={fieldsValues.description}
+                        onChange={handleChangeFieldValue('description')}
+                    />
+                    <FormControl fullWidth>
+                        <InputLabel id="theme">Тема</InputLabel>
+                        <Select
+                            labelId="theme"
+                            id="theme"
+                            label="theme"
+                            value={fieldsValues.theme}
+                            onChange={handleChangeFieldValue('theme')}
+                        >
+                            {collectionTypes
+                                ? collectionTypes.map(el => (
+                                      <MenuItem value={el} key={el}>
+                                          {el}
+                                      </MenuItem>
+                                  ))
+                                : null}
+                        </Select>
+                    </FormControl>
+                    <Typography
+                        component={'div'}
+                        sx={{
+                            display: 'inline-flex',
+                            border: drag ? '2px dashed red' : '2px dashed grey',
+                            color: drag ? 'red' : 'grey',
+                            padding: fieldsValues.image
+                                ? '6px 15px'
+                                : '14px 15px',
+                            borderRadius: '5px',
+                            margin: '8px',
+                            lineHeight: '1.5',
+                            width: '31ch',
+                            textAlign: 'center',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                        onDragStart={handleDragStart}
+                        onDragLeave={handleDragLeave}
+                        onDragOver={handleDragStart}
+                        onDrop={handleDrop}
+                    >
+                        {fieldsValues.image ? (
+                            <ImageIcon sx={{ marginRight: '10px' }} />
+                        ) : null}
+                        {drag
+                            ? 'Отпустите изображение'
+                            : 'Перетащите изображение'}
+                        {fieldsValues.image ? (
+                            <IconButton
+                                aria-label="delete"
+                                onClick={handleDeleteImage}
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                        ) : null}
+                    </Typography>
+                    <Button
+                        variant="contained"
+                        startIcon={<AddIcon />}
+                        onClick={handleCreateCollection}
+                        disabled={isButtonCreateDisabled}
+                        sx={{
+                            padding: '18px',
+                            lineHeight: '1.5',
+                            margin: '8px',
+                        }}
+                    >
+                        Создать коллекцию
+                    </Button>
+                </Box>
             </Box>
             <Box component={'div'}>
                 <Typography variant="h6" component="h3">

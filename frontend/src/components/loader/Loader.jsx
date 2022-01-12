@@ -7,15 +7,21 @@ const Loader = () => {
         <Box
             sx={{
                 display: 'flex',
-                position: 'absolute',
+                position: 'fixed',
                 width: '100%',
                 height: '100%',
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50% -50%)',
+                left: '0',
+                top: '0',
             }}
         >
-            <CircularProgress />
+            <CircularProgress
+                sx={{
+                    position: 'absolute',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50% -50%)',
+                }}
+            />
         </Box>
     )
 }

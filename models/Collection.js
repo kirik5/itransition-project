@@ -7,7 +7,7 @@ const schema = new Schema({
     image: { type: String },
     items: [{ type: Types.ObjectId, ref: 'Item' }],
     owner: { type: Types.ObjectId, ref: 'User', required: true },
-    collectionschema: { type: Object, required: true },
+    collectionschema: { type: Object },
 })
 
 module.exports = model('Collections', schema)

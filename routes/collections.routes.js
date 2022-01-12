@@ -2,21 +2,24 @@ const { Router } = require('express')
 const Collection = require('../models/Collection')
 const CollectionTypes = require('../models/CollectionTypes')
 const auth = require('../middleware/auth.middleware')
+const upload = require('../middleware/upload.middleware')
+
 const router = Router()
 
-router.post('/create', auth, async (req, res) => {
+router.post('/create', auth, upload.single('image'), async (req, res) => {
     try {
-        const { name, description, theme, image, collectionschema } = req.body
+        const { name, description, theme, collectionschema } = req.body
 
         const collection = new Collection({
             name,
             description,
             theme,
-            image,
+            image: req.file ? req.file.path : '',
             owner: req.user.userId,
-            collectionschema,
+            collectionschema: JSON.parse(collectionschema),
         })
         await collection.save()
+        console.log('save')
         res.status(201).json({ message: 'Коллекция создана!' })
     } catch (error) {
         res.status(500).json({

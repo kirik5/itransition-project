@@ -27,8 +27,8 @@ const useAuth = () => {
 
         if (authData && authData.token) {
             login(authData.token, authData.userId)
-            setReady(true)
         }
+        setReady(true)
     }, [login])
 
     return { login, logout, token, userId, ready }

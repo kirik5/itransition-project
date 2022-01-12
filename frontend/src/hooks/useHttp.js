@@ -38,9 +38,35 @@ const useHttp = () => {
         []
     )
 
+    const requestImg = useCallback(
+        async (url, method = 'GET', body = null, headers = {}) => {
+            setLoading(true)
+
+            try {
+                const response = await fetch(url, { method, body, headers })
+                const data = await response.json()
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Something went wrong!!!')
+                }
+
+                setSuccessMessage(data.message)
+
+                return data
+            } catch (error) {
+                setError(error.message)
+                throw error
+            } finally {
+                setLoading(false)
+            }
+        },
+        []
+    )
+
     return {
         loading,
         request,
+        requestImg,
         error,
         clearError,
         successMessage,

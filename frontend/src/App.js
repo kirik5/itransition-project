@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import NoMatch from './components/noMatch/NoMatch'
+// import NoMatch from './components/noMatch/NoMatch'
 import Home from './components/home/Home'
 import useRoutes from './hooks/useRoutes'
 import useAuth from './hooks/useAuth'
@@ -28,7 +28,7 @@ const App = () => {
                 <Routes>
                     <Route path="/" element={<Home />}>
                         {routes}
-                        <Route path="*" element={<NoMatch />} />
+                        {/*<Route path="*" element={<NoMatch />} />*/}
                     </Route>
                 </Routes>
             )}
