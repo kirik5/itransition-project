@@ -8,12 +8,19 @@ import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 import AuthContext from '../../context/AuthContext'
 import { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const ButtonAppBar = ({ onDrawerOpen }) => {
     const { isAuthenticated, logout } = useContext(AuthContext)
 
+    const navigate = useNavigate()
+
     const handleLogout = () => {
         logout()
+    }
+
+    const handleLogin = () => {
+        navigate('/auth')
     }
 
     return (
@@ -37,9 +44,13 @@ const ButtonAppBar = ({ onDrawerOpen }) => {
                     >
                         Книги
                     </Typography>
-                    {isAuthenticated && (
+                    {isAuthenticated ? (
                         <Button color="inherit" onClick={handleLogout}>
                             Выйти
+                        </Button>
+                    ) : (
+                        <Button color="inherit" onClick={handleLogin}>
+                            Войти
                         </Button>
                     )}
                 </Toolbar>

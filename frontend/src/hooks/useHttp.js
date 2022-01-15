@@ -1,9 +1,12 @@
 import { useCallback, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const useHttp = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [successMessage, setSuccessMessage] = useState(null)
+
+    const navigate = useNavigate()
 
     const clearError = () => setError(null)
     const clearSuccessMessage = () => setSuccessMessage(null)
@@ -22,6 +25,9 @@ const useHttp = () => {
                 const data = await response.json()
 
                 if (!response.ok) {
+                    if (response.status === 401) {
+                        navigate('/auth')
+                    }
                     throw new Error(data.message || 'Something went wrong!!!')
                 }
 
@@ -47,6 +53,10 @@ const useHttp = () => {
                 const data = await response.json()
 
                 if (!response.ok) {
+                    if (response.status === 401) {
+                        navigate('/auth')
+                    }
+
                     throw new Error(data.message || 'Something went wrong!!!')
                 }
 

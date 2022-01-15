@@ -17,6 +17,7 @@ import AuthContext from '../../context/AuthContext'
 import DeleteIcon from '@mui/icons-material/Delete'
 import IconButton from '@mui/material/IconButton'
 import ImageIcon from '@mui/icons-material/Image'
+import { useNavigate } from 'react-router-dom'
 
 const types = ['String', 'Boolean', 'Date', 'Integer']
 
@@ -29,6 +30,8 @@ const AddCollection = () => {
         image: '',
     })
     const [drag, setDrag] = useState(false)
+
+    const navigate = useNavigate()
 
     const handleDragStart = event => {
         event.preventDefault()
@@ -43,8 +46,6 @@ const AddCollection = () => {
     const handleDrop = event => {
         event.preventDefault()
         const file = [...event.dataTransfer.files][0]
-        console.log(file)
-        console.log(file.type)
         if (file.type === 'image/png' || file.type === 'image/jpeg') {
             fieldsValues.image = file
         }
@@ -147,8 +148,6 @@ const AddCollection = () => {
             }
         })
 
-        console.log('---', fieldsValues)
-
         const data = new FormData()
         data.append('name', fieldsValues.name)
         data.append('description', fieldsValues.description)
@@ -160,16 +159,10 @@ const AddCollection = () => {
         )
 
         try {
-            const response = await requestImg(
-                '/api/collections/create',
-                'POST',
-                data,
-                {
-                    Authorization: `Bearer ${auth.token}`,
-                }
-            )
-
-            console.log('response = ', response)
+            await requestImg('/api/collections/create', 'POST', data, {
+                Authorization: `Bearer ${auth.token}`,
+            })
+            navigate('/my-collections')
         } catch (error) {}
     }
 

@@ -18,6 +18,7 @@ import useHttp from '../../hooks/useHttp'
 import AuthMessage from './authMessage/AuthMessage'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import AuthContext from '../../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 const Auth = () => {
     const {
@@ -30,6 +31,8 @@ const Auth = () => {
     } = useHttp()
 
     const auth = useContext(AuthContext)
+
+    const navigate = useNavigate()
 
     const [form, setForm] = useState({
         email: '',
@@ -102,6 +105,7 @@ const Auth = () => {
                 ...form,
             })
             auth.login(data.token, data.userId)
+            navigate(-1)
         } catch (error) {}
     }
 

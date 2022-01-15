@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 // import NoMatch from './components/noMatch/NoMatch'
-import Home from './components/home/Home'
+import HomePage from './components/homePage/HomePage'
 import useRoutes from './hooks/useRoutes'
 import useAuth from './hooks/useAuth'
 import AuthContext from './context/AuthContext'
@@ -26,7 +26,7 @@ const App = () => {
                 <Loader />
             ) : (
                 <Routes>
-                    <Route path="/" element={<Home />}>
+                    <Route path="/" element={<HomePage />}>
                         {routes}
                         {/*<Route path="*" element={<NoMatch />} />*/}
                     </Route>

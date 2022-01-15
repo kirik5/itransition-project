@@ -1,5 +1,6 @@
-import React from 'react'
-import EnhancedTableHead from './EnhancedTableHead'
+import React, { useContext } from 'react'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 import Box from '@mui/material/Box'
 import {
     Paper,
@@ -10,14 +11,22 @@ import {
     TablePagination,
     TableRow,
 } from '@mui/material'
-import { getComparator, stableSort } from './sortingFunctions'
-import headCells from './headCells'
 
-const AllCollections = ({ allCollections }) => {
+import headCells from './headCells'
+import EnhancedTableHead from '../allCollections/EnhancedTableHead'
+import { getComparator, stableSort } from '../allCollections/sortingFunctions'
+import IconButton from '@mui/material/IconButton'
+import useHttp from '../../hooks/useHttp'
+import AuthContext from '../../context/AuthContext'
+
+const MyCollections = ({ myCollections, getMyCollections }) => {
     const [order, setOrder] = React.useState('asc')
     const [orderBy, setOrderBy] = React.useState('name')
     const [page, setPage] = React.useState(0)
     const [rowsPerPage, setRowsPerPage] = React.useState(5)
+
+    const { request } = useHttp()
+    const auth = useContext(AuthContext)
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc'
@@ -32,6 +41,29 @@ const AllCollections = ({ allCollections }) => {
     const handleChangeRowsPerPage = event => {
         setRowsPerPage(parseInt(event.target.value, 10))
         setPage(0)
+    }
+
+    const handleDeleteCollection = id => async event => {
+        event.stopPropagation()
+        try {
+            await request(`/api/collections/${id}`, 'DELETE', null, {
+                Authorization: `Bearer ${auth.token}`,
+            })
+            getMyCollections()
+        } catch (error) {}
+
+        console.log('delete collection')
+    }
+
+    const handleChangeCollection = event => {
+        event.stopPropagation()
+        console.log('change collection')
+    }
+
+    const handleClickCollection = event => {
+        event.stopPropagation()
+
+        console.log('click collection')
     }
 
     return (
@@ -51,7 +83,7 @@ const AllCollections = ({ allCollections }) => {
                         />
                         <TableBody>
                             {stableSort(
-                                allCollections,
+                                myCollections,
                                 getComparator(order, orderBy)
                             )
                                 .slice(
@@ -67,9 +99,7 @@ const AllCollections = ({ allCollections }) => {
                                             role="checkbox"
                                             tabIndex={-1}
                                             key={row.id}
-                                            onClick={() =>
-                                                console.log('row click')
-                                            }
+                                            onClick={handleClickCollection}
                                         >
                                             <TableCell align="center">
                                                 {index + 1 + page * rowsPerPage}
@@ -84,7 +114,11 @@ const AllCollections = ({ allCollections }) => {
                                                 <img
                                                     src={row.image}
                                                     width={'100'}
-                                                    alt=""
+                                                    alt={
+                                                        !row.image
+                                                            ? 'without image'
+                                                            : row.image
+                                                    }
                                                     style={{ display: 'block' }}
                                                 />
                                             </TableCell>
@@ -100,6 +134,24 @@ const AllCollections = ({ allCollections }) => {
                                             <TableCell align="left">
                                                 {row.ownerEmail}
                                             </TableCell>
+                                            <TableCell align="center">
+                                                <IconButton
+                                                    onClick={
+                                                        handleChangeCollection
+                                                    }
+                                                >
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <IconButton
+                                                    onClick={handleDeleteCollection(
+                                                        row.id
+                                                    )}
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </TableCell>
                                         </TableRow>
                                     )
                                 })}
@@ -109,7 +161,7 @@ const AllCollections = ({ allCollections }) => {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={allCollections.length}
+                    count={myCollections.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
@@ -120,4 +172,4 @@ const AllCollections = ({ allCollections }) => {
     )
 }
 
-export default AllCollections
+export default MyCollections

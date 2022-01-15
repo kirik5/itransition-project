@@ -5,7 +5,7 @@ import ButtonAppBar from '../appBar/ArrBar'
 import MenuDrawer from '../menuDrawer/MenuDrawer'
 import MenuList from '../menuList/MenuList'
 
-const Home = () => {
+const HomePage = () => {
     const [isDrawerOpen, setDrawerOpen] = useState(false)
 
     const handleDrawerClose = () => {
@@ -36,4 +36,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default HomePage
