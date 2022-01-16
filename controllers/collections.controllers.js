@@ -14,7 +14,6 @@ module.exports.create = async (req, res) => {
             collectionschema: JSON.parse(collectionschema),
         })
         await collection.save()
-        console.log('save')
         res.status(201).json({ message: 'Коллекция создана!' })
     } catch (error) {
         res.status(500).json({
@@ -25,12 +24,9 @@ module.exports.create = async (req, res) => {
 
 module.exports.getMyCollections = async (req, res) => {
     try {
-        console.log('get my collections', req.user.userId)
         const collections = await Collection.find({
             owner: req.user.userId,
         })
-
-        console.log(collections)
 
         let collectionsFields
         if (collections) {
@@ -48,7 +44,6 @@ module.exports.getMyCollections = async (req, res) => {
                 })
             )
         }
-
         res.json(collectionsFields)
     } catch (error) {
         res.status(500).json({

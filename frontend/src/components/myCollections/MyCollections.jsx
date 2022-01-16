@@ -19,7 +19,7 @@ import IconButton from '@mui/material/IconButton'
 import useHttp from '../../hooks/useHttp'
 import AuthContext from '../../context/AuthContext'
 
-const MyCollections = ({ myCollections, getMyCollections }) => {
+const MyCollections = ({ myCollections, setFilteredCollections }) => {
     const [order, setOrder] = React.useState('asc')
     const [orderBy, setOrderBy] = React.useState('name')
     const [page, setPage] = React.useState(0)
@@ -49,7 +49,8 @@ const MyCollections = ({ myCollections, getMyCollections }) => {
             await request(`/api/collections/${id}`, 'DELETE', null, {
                 Authorization: `Bearer ${auth.token}`,
             })
-            getMyCollections()
+            const withoutDeleted = myCollections.filter(coll => coll.id !== id)
+            setFilteredCollections(withoutDeleted)
         } catch (error) {}
 
         console.log('delete collection')

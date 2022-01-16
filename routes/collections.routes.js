@@ -9,6 +9,7 @@ const {
     getMyCollections,
     deleteCollection,
 } = require('../controllers/collections.controllers')
+const deleteImg = require('../middleware/deleteImg.middleware')
 
 const router = Router()
 
@@ -18,7 +19,7 @@ router.get('/', getAllCollections)
 
 router.get('/my', auth, getMyCollections)
 
-router.delete('/:id', auth, deleteCollection)
+router.delete('/:id', auth, deleteImg, deleteCollection)
 
 router.get('/types', async (req, res) => {
     try {

@@ -5,7 +5,7 @@ import useHttp from '../../hooks/useHttp'
 import AuthContext from '../../context/AuthContext'
 import MyCollections from '../myCollections/MyCollections'
 
-const AllCollectionsPage = () => {
+const MyCollectionsPage = () => {
     const [myCollections, setMyCollections] = useState(null)
     const auth = useContext(AuthContext)
 
@@ -24,6 +24,8 @@ const AllCollectionsPage = () => {
             setMyCollections(myCollections)
         } catch (error) {}
     }
+
+    const setFilteredCollections = filtered => setMyCollections(filtered)
 
     useEffect(async () => {
         getMyCollections()
@@ -45,7 +47,7 @@ const AllCollectionsPage = () => {
                     {myCollections ? (
                         <MyCollections
                             myCollections={myCollections}
-                            getMyCollections={getMyCollections}
+                            setFilteredCollections={setFilteredCollections}
                         />
                     ) : (
                         <Box component={'div'} sx={{ color: 'red' }}>
@@ -58,4 +60,4 @@ const AllCollectionsPage = () => {
     )
 }
 
-export default AllCollectionsPage
+export default MyCollectionsPage
