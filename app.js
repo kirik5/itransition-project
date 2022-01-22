@@ -18,12 +18,12 @@ if (process.env.NODE_ENV === 'production') {
     })
 }
 
-const PORT = config.get('port') || 80
+const PORT = config.get('port') || 8080
 
 const start = async () => {
     try {
         await mongoose.connect(config.get('mongoUri'), {})
-        app.listen(PORT, () =>
+        app.listen(process.env.PORT || 5000, () =>
             console.log(`App has been started on ${PORT} port...`)
         )
     } catch (error) {
