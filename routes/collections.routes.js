@@ -9,6 +9,7 @@ const {
     getMyCollections,
     deleteCollection,
     getCollectionById,
+    updateCollection,
 } = require('../controllers/collections.controllers')
 const deleteImg = require('../middleware/deleteImg.middleware')
 
@@ -31,6 +32,8 @@ router.get('/types', async (req, res) => {
         })
     }
 })
+
+router.put('/update/:id', auth, updateCollection)
 
 router.get('/:id', getCollectionById)
 

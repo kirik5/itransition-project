@@ -41,10 +41,19 @@ const ChangeCurrentCollectionPage = () => {
         data.append('theme', fieldsValues.theme)
         data.append('image', fieldsValues.image)
 
+        console.log('name = ', fieldsValues.name)
+
+        console.log('data get name= ', data.get('name'))
+
         try {
-            await requestImg('/api/collections/create', 'POST', data, {
-                Authorization: `Bearer ${auth.token}`,
-            })
+            await requestImg(
+                `/api/collections/update/${collectionId}`,
+                'PUT',
+                data,
+                {
+                    Authorization: `Bearer ${auth.token}`,
+                }
+            )
             navigate('/my-collections')
         } catch (error) {}
     }
@@ -101,6 +110,7 @@ const ChangeCurrentCollectionPage = () => {
                             isButtonCreateDisabled={isButtonCreateDisabled}
                             setFieldsValues={setFieldsValues}
                             createCollection={handleChangeCollection}
+                            createButtonName={'Изменить коллекцию'}
                         />
                     </Box>
                 </Box>

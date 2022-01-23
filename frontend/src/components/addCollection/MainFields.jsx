@@ -23,6 +23,7 @@ const MainFields = ({
     isButtonCreateDisabled,
     setFieldsValues,
     createCollection,
+    createButtonName,
 }) => {
     return (
         <Box component={'div'}>
@@ -41,9 +42,12 @@ const MainFields = ({
             >
                 <Box
                     sx={{
-                        width: '33.33%',
+                        width: '100%',
                         padding: '10px',
                         boxSizing: 'border-box',
+                        '@media (min-width: 600px)': {
+                            width: '33.33%',
+                        },
                     }}
                 >
                     <TextField
@@ -57,9 +61,12 @@ const MainFields = ({
                 </Box>
                 <Box
                     sx={{
-                        width: '33.33%',
+                        width: '100%',
                         padding: '10px',
                         boxSizing: 'border-box',
+                        '@media (min-width: 600px)': {
+                            width: '33.33%',
+                        },
                     }}
                 >
                     <TextField
@@ -73,9 +80,12 @@ const MainFields = ({
                 </Box>
                 <Box
                     sx={{
-                        width: '33.33%',
+                        width: '100%',
                         padding: '10px',
                         boxSizing: 'border-box',
+                        '@media (min-width: 600px)': {
+                            width: '33.33%',
+                        },
                     }}
                 >
                     <FormControl fullWidth>
@@ -109,7 +119,7 @@ const MainFields = ({
                 onClick={createCollection}
                 disabled={isButtonCreateDisabled}
             >
-                Создать коллекцию
+                {createButtonName || 'Создать коллекцию'}
             </Button>
         </Box>
     )

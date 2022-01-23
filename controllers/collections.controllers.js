@@ -105,3 +105,22 @@ module.exports.deleteCollection = async (req, res) => {
         })
     }
 }
+
+module.exports.updateCollection = async (req, res) => {
+    console.log('update collection...')
+    console.log('id collection = ', req.params.id)
+
+    // const { name, description, theme } = req.body
+    console.log(`req.body = `, req.body)
+    console.log(`req.file = `, req.file)
+    console.log(`req.filePath = `, req.filePath)
+
+    try {
+        // await Collection.update({_id: req.params.id, ...})
+        res.json({ message: `Collection ${req.params.id} was updated!` })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Что-то пошло не так, попробуйте снова',
+        })
+    }
+}

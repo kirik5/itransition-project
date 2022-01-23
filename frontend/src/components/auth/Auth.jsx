@@ -113,10 +113,10 @@ const Auth = () => {
         <>
             <Box
                 sx={{
-                    flexGrow: 1,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    position: 'fixed',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
                 }}
             >
                 <Card variant="outlined" sx={{ maxWidth: 400 }}>
