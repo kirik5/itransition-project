@@ -61,7 +61,11 @@ const ChangeCurrentCollectionPage = () => {
                 'GET'
             )
             console.log('collection = ', collection)
-            setFieldsValues(prev => ({ ...prev, ...collection }))
+            setFieldsValues(prev => ({
+                ...prev,
+                ...collection,
+                imagePreview: '/' + collection.image,
+            }))
         } catch (error) {}
     }, [request, collectionId, setFieldsValues])
 
@@ -91,7 +95,7 @@ const ChangeCurrentCollectionPage = () => {
                             description={fieldsValues.description}
                             theme={fieldsValues.theme}
                             image={fieldsValues.image}
-                            imagePreview={fieldsValues.image}
+                            imagePreview={fieldsValues.imagePreview}
                             changeFieldValue={handleChangeFieldValue}
                             collectionTypes={collectionTypes}
                             isButtonCreateDisabled={isButtonCreateDisabled}

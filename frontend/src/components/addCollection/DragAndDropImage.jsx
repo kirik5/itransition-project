@@ -20,10 +20,8 @@ const DragAndDropImage = ({ image, imagePreview, setFieldsValues }) => {
     const handleDrop = event => {
         event.preventDefault()
         const file = [...event.dataTransfer.files][0]
-        let image
         if (file.type === 'image/png' || file.type === 'image/jpeg') {
             setFieldsValues(prev => ({ ...prev, image: file }))
-            image = file
         }
         setDrag(false)
 
@@ -37,7 +35,7 @@ const DragAndDropImage = ({ image, imagePreview, setFieldsValues }) => {
             reader.onload = null
         }
 
-        reader.readAsDataURL(image)
+        reader.readAsDataURL(file)
     }
 
     const handleDeleteImage = () => {

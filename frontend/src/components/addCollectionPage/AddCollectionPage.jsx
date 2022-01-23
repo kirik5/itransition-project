@@ -104,7 +104,7 @@ const AddCollectionPage = () => {
                     description={fieldsValues.description}
                     theme={fieldsValues.theme}
                     image={fieldsValues.image}
-                    imagePreview={fieldsValues.image}
+                    imagePreview={fieldsValues.imagePreview}
                     changeFieldValue={handleChangeFieldValue}
                     collectionTypes={collectionTypes}
                     isButtonCreateDisabled={isButtonCreateDisabled}
