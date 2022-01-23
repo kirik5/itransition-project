@@ -20,10 +20,7 @@ const HomePage = () => {
         <>
             <Box
                 sx={{
-                    minHeight: '100vh',
                     boxSizing: 'border-box',
-                    display: 'flex',
-                    flexDirection: 'column',
                 }}
             >
                 <ButtonAppBar onDrawerOpen={handleDrawerOpen} />

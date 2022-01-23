@@ -35,7 +35,7 @@ const headCells = [
         sorting: true,
     },
     {
-        id: 'owner',
+        id: 'ownerEmail',
         numeric: false,
         disablePadding: false,
         label: 'Создатель',

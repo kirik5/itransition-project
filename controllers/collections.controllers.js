@@ -76,6 +76,25 @@ module.exports.getAllCollections = async (req, res) => {
     }
 }
 
+module.exports.getCollectionById = async (req, res) => {
+    try {
+        const collection = await Collection.findOne({ _id: req.params.id })
+        const { _id, name, description, theme, image } = collection
+        const collectionFields = {
+            id: _id,
+            name,
+            description,
+            theme,
+            image,
+        }
+        res.json(collectionFields)
+    } catch (error) {
+        res.status(500).json({
+            message: 'Что-то пошло не так, попробуйте снова',
+        })
+    }
+}
+
 module.exports.deleteCollection = async (req, res) => {
     try {
         await Collection.deleteOne({ _id: req.params.id })

@@ -18,6 +18,7 @@ import { getComparator, stableSort } from '../allCollections/sortingFunctions'
 import IconButton from '@mui/material/IconButton'
 import useHttp from '../../hooks/useHttp'
 import AuthContext from '../../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 const MyCollections = ({ myCollections, setFilteredCollections }) => {
     const [order, setOrder] = React.useState('asc')
@@ -27,6 +28,7 @@ const MyCollections = ({ myCollections, setFilteredCollections }) => {
 
     const { request } = useHttp()
     const auth = useContext(AuthContext)
+    const navigate = useNavigate()
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc'
@@ -56,15 +58,14 @@ const MyCollections = ({ myCollections, setFilteredCollections }) => {
         console.log('delete collection')
     }
 
-    const handleChangeCollection = event => {
+    const handleChangeCollection = id => event => {
         event.stopPropagation()
-        console.log('change collection')
+        navigate(`/${id}/change`)
     }
 
-    const handleClickCollection = event => {
+    const handleClickCollection = id => event => {
         event.stopPropagation()
-
-        console.log('click collection')
+        navigate(`/${id}`)
     }
 
     return (
@@ -100,7 +101,9 @@ const MyCollections = ({ myCollections, setFilteredCollections }) => {
                                             role="checkbox"
                                             tabIndex={-1}
                                             key={row.id}
-                                            onClick={handleClickCollection}
+                                            onClick={handleClickCollection(
+                                                row.id
+                                            )}
                                         >
                                             <TableCell align="center">
                                                 {index + 1 + page * rowsPerPage}
@@ -137,9 +140,9 @@ const MyCollections = ({ myCollections, setFilteredCollections }) => {
                                             </TableCell>
                                             <TableCell align="center">
                                                 <IconButton
-                                                    onClick={
-                                                        handleChangeCollection
-                                                    }
+                                                    onClick={handleChangeCollection(
+                                                        row.id
+                                                    )}
                                                 >
                                                     <EditIcon />
                                                 </IconButton>
