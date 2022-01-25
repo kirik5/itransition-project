@@ -10,4 +10,4 @@ const schema = new Schema({
     collectionschema: { type: Object },
 })
 
-module.exports = model('Collections', schema)
+module.exports = model('Collection', schema)

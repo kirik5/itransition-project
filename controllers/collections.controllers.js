@@ -1,7 +1,8 @@
 const Collection = require('../models/Collection')
 const User = require('../models/User')
+const Item = require('../models/Item')
 
-module.exports.create = async (req, res) => {
+module.exports.createCollection = async (req, res) => {
     try {
         const { name, description, theme, collectionschema } = req.body
 
@@ -13,8 +14,55 @@ module.exports.create = async (req, res) => {
             owner: req.user.userId,
             collectionschema: JSON.parse(collectionschema),
         })
+
         await collection.save()
         res.status(201).json({ message: 'Коллекция создана!' })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Что-то пошло не так, попробуйте снова',
+        })
+    }
+}
+
+module.exports.createItem = async (req, res) => {
+    try {
+        const { collectionId, name, tags, ...rest } = req.body
+        const newItem = new Item({
+            name,
+            tags,
+            collectionOwner: collectionId,
+            additionalFields: { ...rest },
+        })
+        const savedItem = await newItem.save()
+        let request = {
+            id: savedItem._id,
+            name: savedItem.name,
+            tags: savedItem.tags,
+        }
+        if (savedItem.additionalFields) {
+            request = { ...request, ...savedItem.additionalFields }
+        }
+        res.status(201).json(request)
+    } catch (error) {
+        res.status(500).json({
+            message: 'Что-то пошло не так, попробуйте снова',
+        })
+    }
+}
+
+module.exports.getCollectionItems = async (req, res) => {
+    try {
+        const items = await Item.find({ collectionOwner: req.params.id })
+
+        const transformItems = items.map(elem => {
+            let result = { id: elem._id, name: elem.name, tags: elem.tags }
+            if (elem.additionalFields) {
+                result = { ...result, ...elem.additionalFields }
+            }
+            return result
+        })
+
+        res.json(transformItems)
     } catch (error) {
         res.status(500).json({
             message: 'Что-то пошло не так, попробуйте снова',
@@ -79,13 +127,23 @@ module.exports.getAllCollections = async (req, res) => {
 module.exports.getCollectionById = async (req, res) => {
     try {
         const collection = await Collection.findOne({ _id: req.params.id })
-        const { _id, name, description, theme, image } = collection
+        const {
+            _id,
+            name,
+            description,
+            theme,
+            image,
+            collectionschema,
+            items,
+        } = collection
         const collectionFields = {
             id: _id,
             name,
             description,
             theme,
             image,
+            collectionschema,
+            items,
         }
         res.json(collectionFields)
     } catch (error) {

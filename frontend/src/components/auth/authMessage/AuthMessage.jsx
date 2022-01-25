@@ -13,7 +13,7 @@ const AuthMessage = ({
     useEffect(() => {
         setOpenError(!!error)
         setOpenSuccess(!!successMessage)
-    }, [error, successMessage])
+    }, [error, successMessage, setOpenError, setOpenSuccess])
 
     const handleCloseError = (event, reason) => {
         if (reason === 'clickaway') {

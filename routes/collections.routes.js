@@ -1,28 +1,36 @@
 const { Router } = require('express')
-const Collection = require('../models/Collection')
-const CollectionTypes = require('../models/CollectionTypes')
+const CollectionTypes = require('../models/CollectionType')
 const auth = require('../middleware/auth.middleware')
 const upload = require('../middleware/upload.middleware')
 const {
-    create,
+    createCollection,
     getAllCollections,
     getMyCollections,
     deleteCollection,
     getCollectionById,
-    updateCollection,
+    createItem,
+    getCollectionItems,
 } = require('../controllers/collections.controllers')
 const deleteImg = require('../middleware/deleteImg.middleware')
 
 const router = Router()
 
-router.post('/create', auth, upload.single('image'), create)
+// router.post('/update', async (req, res) => {
+//     console.log('update collection...')
+//     console.log(`req.body = `, req.body)
+// })
+
+router.post('/create', auth, upload.single('image'), createCollection)
+
+router.post('/items/create', auth, createItem)
+
+router.get('/items/:id', getCollectionItems)
 
 router.get('/', getAllCollections)
 
 router.get('/my', auth, getMyCollections)
 
 router.get('/types', async (req, res) => {
-    console.log('types!!!')
     try {
         const collectionTypes = await CollectionTypes.find({})
         res.json(collectionTypes)
@@ -33,21 +41,19 @@ router.get('/types', async (req, res) => {
     }
 })
 
-router.put('/update/:id', auth, updateCollection)
-
 router.get('/:id', getCollectionById)
 
 router.delete('/:id', auth, deleteImg, deleteCollection)
 
-router.get('/:id', async (req, res) => {
-    try {
-        const collections = await Collection.findById(req.params.id)
-        res.json(collections)
-    } catch (error) {
-        res.status(500).json({
-            message: 'Что-то пошло не так, попробуйте снова',
-        })
-    }
-})
+// router.get('/:id', async (req, res) => {
+//     try {
+//         const collections = await Collection.findById(req.params.id)
+//         res.json(collections)
+//     } catch (error) {
+//         res.status(500).json({
+//             message: 'Что-то пошло не так, попробуйте снова',
+//         })
+//     }
+// })
 
 module.exports = router

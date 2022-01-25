@@ -60,12 +60,12 @@ const MyCollections = ({ myCollections, setFilteredCollections }) => {
 
     const handleChangeCollection = id => event => {
         event.stopPropagation()
-        navigate(`/${id}/change`)
+        navigate(`/my-collections/${id}/change`)
     }
 
     const handleClickCollection = id => event => {
         event.stopPropagation()
-        navigate(`/${id}`)
+        navigate(`/my-collections/${id}`)
     }
 
     return (

@@ -4,4 +4,4 @@ const schema = new Schema({
     type: { type: String, required: true },
 })
 
-module.exports = model('collectiontypes', schema)
+module.exports = model('collectiontype', schema)
