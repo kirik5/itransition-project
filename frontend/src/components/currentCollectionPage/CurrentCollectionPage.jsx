@@ -10,9 +10,7 @@ import ItemsList from '../currentCollection/ItemsList'
 
 const CurrentCollectionPage = () => {
     const { collectionId } = useParams()
-
     const auth = useContext(AuthContext)
-
     const { request, loading } = useHttp()
 
     const [collection, setCollection] = useState(null)
@@ -24,16 +22,16 @@ const CurrentCollectionPage = () => {
 
     const getCollection = useCallback(async () => {
         try {
-            const collection = await request(
+            const collections = await request(
                 `/api/collections/${collectionId}`,
                 'GET'
             )
             setCollection(prev => ({
                 ...prev,
-                ...collection,
+                ...collections,
             }))
         } catch (error) {}
-    }, [request, auth.token, setCollection])
+    }, [request, setCollection])
 
     const getItems = useCallback(async () => {
         try {
@@ -141,7 +139,16 @@ const CurrentCollectionPage = () => {
                                 saveNewItem={handleSaveNewItem}
                             />
                         )}
-                        {items?.length && <ItemsList items={items} />}
+                        {items?.length && (
+                            <ItemsList
+                                items={items}
+                                fieldsTypes={Object.keys(
+                                    collection.collectionschema
+                                ).map(
+                                    key => collection.collectionschema[key].type
+                                )}
+                            />
+                        )}
                     </Box>
                 )
             )}
