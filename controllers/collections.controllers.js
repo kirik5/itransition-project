@@ -24,13 +24,33 @@ module.exports.createCollection = async (req, res) => {
     }
 }
 
-module.exports.updateCollection2 = async (req, res) => {
-    const { name, description, theme } = req.body
-    await Collection.updateOne(
-        { _id: req.params.id },
-        { name, description, theme, image: req.file ? req.file.path : '' }
-    )
-    res.json({ message: `Item ${req.params.id} was updated!` })
+module.exports.updateCollection = async (req, res) => {
+    try {
+        const collection = await Collection.findOne({ _id: req.params.id })
+
+        if (collection.owner.toString() !== req.user.userId.toString()) {
+            throw new Error({ message: 'Вам не пренадлежит данная коллекция' })
+        }
+        const { name, description, theme } = req.body
+
+        console.log('collection.image = ', collection.image)
+        let newValue = { name, description, theme }
+        if (req.file?.path) {
+            newValue = { ...newValue, image: req.file.path }
+        }
+
+        console.log('newValue = ', newValue)
+
+        await Collection.updateOne(
+            { _id: req.params.id },
+            { name, description, theme, image: req.file ? req.file.path : '' }
+        )
+        res.json({ message: `Item ${req.params.id} was updated!` })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Что-то пошло не так, попробуйте снова',
+        })
+    }
 }
 
 module.exports.createItem = async (req, res) => {
@@ -81,7 +101,9 @@ module.exports.deleteItem = async (req, res) => {
 
 module.exports.getCollectionItems = async (req, res) => {
     try {
-        const items = await Item.find({ collectionOwner: req.params.id })
+        const items = await Item.find({
+            collectionOwner: req.params.collectionId,
+        })
 
         const transformItems = items.map(elem => {
             let result = { id: elem._id, name: elem.name, tags: elem.tags }
@@ -92,6 +114,17 @@ module.exports.getCollectionItems = async (req, res) => {
         })
 
         res.json(transformItems)
+    } catch (error) {
+        res.status(500).json({
+            message: 'Что-то пошло не так, попробуйте снова',
+        })
+    }
+}
+
+module.exports.getItem = async (req, res) => {
+    try {
+        const item = await Item.findOne({ _id: req.params.itemId })
+        res.json(item)
     } catch (error) {
         res.status(500).json({
             message: 'Что-то пошло не так, попробуйте снова',
@@ -182,6 +215,20 @@ module.exports.getCollectionById = async (req, res) => {
     }
 }
 
+module.exports.getCollectionByItemId = async (req, res) => {
+    try {
+        const item = await Item.findOne({ _id: req.params.itemId })
+        const collection = await Collection.findOne({
+            _id: item.collectionOwner,
+        })
+        res.json(collection)
+    } catch (error) {
+        res.status(500).json({
+            message: 'Что-то пошло не так, попробуйте снова',
+        })
+    }
+}
+
 module.exports.deleteCollection = async (req, res) => {
     try {
         await Collection.deleteOne({ _id: req.params.id })
@@ -193,18 +240,18 @@ module.exports.deleteCollection = async (req, res) => {
     }
 }
 
-module.exports.updateCollection = async (req, res) => {
-    console.log('update collection...')
-    console.log('id collection = ', req.params.id)
+module.exports.updateItem = async (req, res) => {
+    const item = await Item.findOne({ _id: req.params.itemId })
+    const collection = await Collection.findOne({
+        _id: item.collectionOwner,
+    })
 
-    // const { name, description, theme } = req.body
-    console.log(`req.body = `, req.body)
-    console.log(`req.file = `, req.file)
-    console.log(`req.filePath = `, req.filePath)
-
+    if (collection.owner.toString() !== req.user.userId.toString()) {
+        throw new Error({ message: 'Вам не пренадлежит данная коллекция' })
+    }
     try {
-        // await Collection.update({_id: req.params.id, ...})
-        res.json({ message: `Collection ${req.params.id} was updated!` })
+        await Item.updateOne({ _id: req.params.itemId }, { ...req.body })
+        res.json({ message: `Item ${req.params.itemId} was updated!` })
     } catch (error) {
         res.status(500).json({
             message: 'Что-то пошло не так, попробуйте снова',

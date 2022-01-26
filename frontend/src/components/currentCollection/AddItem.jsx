@@ -5,12 +5,14 @@ import { Checkbox, FormControlLabel, TextField } from '@mui/material'
 import Button from '@mui/material/Button'
 
 const AddItem = ({
+    title = null,
     fields,
     fieldsValues,
     collection,
     onChangeFieldsValues,
     onChangeCheckbox,
     saveNewItem,
+    isSaveEditedItemButtonDisabled,
 }) => {
     const isCreateItemButtonDisabled = fields.reduce((acc, current) => {
         if (collection.collectionschema[current].required) {
@@ -45,7 +47,7 @@ const AddItem = ({
                 component={'h2'}
                 sx={{ marginTop: '20px' }}
             >
-                Добавление новой записи в коллекцию
+                {title || 'Добавление новой записи в коллекцию'}
             </Typography>
             <Box
                 sx={{
@@ -124,7 +126,9 @@ const AddItem = ({
             <Button
                 variant={'contained'}
                 onClick={saveNewItem}
-                disabled={isCreateItemButtonDisabled}
+                disabled={
+                    isSaveEditedItemButtonDisabled || isCreateItemButtonDisabled
+                }
             >
                 Сохранить запись
             </Button>
