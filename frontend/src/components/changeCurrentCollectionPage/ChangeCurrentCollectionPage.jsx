@@ -39,12 +39,25 @@ const ChangeCurrentCollectionPage = () => {
         data.append('name', fieldsValues.name)
         data.append('description', fieldsValues.description)
         data.append('theme', fieldsValues.theme)
-        data.append('image', fieldsValues.image)
+
+        const isImageOld =
+            fieldsValues.image === fieldsValues.imagePreview.slice(1)
+        const isImageEmpty = fieldsValues.image === ''
+
+        data.append(
+            'image',
+            isImageOld || isImageEmpty ? '' : fieldsValues.image
+        )
 
         try {
-            await requestImg(`/api/collections/update`, 'POST', data, {
-                Authorization: `Bearer ${auth.token}`,
-            })
+            await requestImg(
+                `/api/collections/update/${collectionId}`,
+                'PATCH',
+                data,
+                {
+                    Authorization: `Bearer ${auth.token}`,
+                }
+            )
             navigate('/my-collections')
         } catch (error) {}
     }

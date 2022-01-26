@@ -111,46 +111,61 @@ const CurrentCollectionPage = () => {
         } catch (error) {}
     }
 
+    const handleDeleteItem = itemId => async () => {
+        try {
+            await request(
+                `/api/collections/items/delete/${itemId}`,
+                'DELETE',
+                null,
+                {
+                    Authorization: `Bearer ${auth.token}`,
+                }
+            )
+        } catch (error) {}
+        setItems(prev => {
+            const newItems = [...prev]
+            const index = newItems.findIndex(item => item.id === itemId)
+            newItems.splice(index, 1)
+            return newItems
+        })
+    }
+
     return (
         <>
-            {loading ? (
-                <Loader />
-            ) : (
-                collection && (
-                    <Box
-                        element={'div'}
-                        sx={{
-                            maxWidth: '1200px',
-                            margin: '0 auto',
-                            padding: '10px',
-                        }}
-                    >
-                        <CollectionInfo
+            {loading && <Loader />}
+            {collection && (
+                <Box
+                    element={'div'}
+                    sx={{
+                        maxWidth: '1200px',
+                        margin: '0 auto',
+                        padding: '10px',
+                    }}
+                >
+                    <CollectionInfo
+                        collection={collection}
+                        onChangeAddItemMode={handleChangeAddItemMode}
+                    />
+                    {addItemMode && (
+                        <AddItem
+                            fields={fields}
+                            fieldsValues={fieldsValues}
                             collection={collection}
-                            onChangeAddItemMode={handleChangeAddItemMode}
+                            onChangeFieldsValues={handleChangeFieldsValues}
+                            onChangeCheckbox={handleChangeCheckbox}
+                            saveNewItem={handleSaveNewItem}
                         />
-                        {addItemMode && (
-                            <AddItem
-                                fields={fields}
-                                fieldsValues={fieldsValues}
-                                collection={collection}
-                                onChangeFieldsValues={handleChangeFieldsValues}
-                                onChangeCheckbox={handleChangeCheckbox}
-                                saveNewItem={handleSaveNewItem}
-                            />
-                        )}
-                        {items?.length && (
-                            <ItemsList
-                                items={items}
-                                fieldsTypes={Object.keys(
-                                    collection.collectionschema
-                                ).map(
-                                    key => collection.collectionschema[key].type
-                                )}
-                            />
-                        )}
-                    </Box>
-                )
+                    )}
+                    {items?.length && (
+                        <ItemsList
+                            items={items}
+                            fieldsTypes={Object.keys(
+                                collection.collectionschema
+                            ).map(key => collection.collectionschema[key].type)}
+                            deleteItem={handleDeleteItem}
+                        />
+                    )}
+                </Box>
             )}
         </>
     )

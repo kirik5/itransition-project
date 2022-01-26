@@ -11,7 +11,7 @@ import {
     TablePagination,
     TableRow,
 } from '@mui/material'
-
+import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported'
 import headCells from './headCells'
 import EnhancedTableHead from '../allCollections/EnhancedTableHead'
 import { getComparator, stableSort } from '../allCollections/sortingFunctions'
@@ -51,16 +51,17 @@ const MyCollections = ({ myCollections, setFilteredCollections }) => {
             await request(`/api/collections/${id}`, 'DELETE', null, {
                 Authorization: `Bearer ${auth.token}`,
             })
+            if (myCollections.length - 1 === page * rowsPerPage) {
+                setPage(prev => prev - 1)
+            }
             const withoutDeleted = myCollections.filter(coll => coll.id !== id)
             setFilteredCollections(withoutDeleted)
         } catch (error) {}
-
-        console.log('delete collection')
     }
 
     const handleChangeCollection = id => event => {
         event.stopPropagation()
-        navigate(`/my-collections/${id}/change`)
+        navigate(`/my-collections/change/${id}`)
     }
 
     const handleClickCollection = id => event => {
@@ -98,6 +99,7 @@ const MyCollections = ({ myCollections, setFilteredCollections }) => {
                                     return (
                                         <TableRow
                                             hover
+                                            sx={{ cursor: 'pointer' }}
                                             role="checkbox"
                                             tabIndex={-1}
                                             key={row.id}
@@ -113,18 +115,25 @@ const MyCollections = ({ myCollections, setFilteredCollections }) => {
                                                 id={labelId}
                                                 scope="row"
                                                 padding="none"
-                                                align={'left'}
+                                                align={'center'}
                                             >
-                                                <img
-                                                    src={row.image}
-                                                    width={'100'}
-                                                    alt={
-                                                        !row.image
-                                                            ? 'without image'
-                                                            : row.image
-                                                    }
-                                                    style={{ display: 'block' }}
-                                                />
+                                                {row.image ? (
+                                                    <img
+                                                        src={row.image}
+                                                        width={'100'}
+                                                        alt={
+                                                            !row.image
+                                                                ? 'without image'
+                                                                : row.image
+                                                        }
+                                                        style={{
+                                                            display: 'block',
+                                                            margin: '0 auto',
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <ImageNotSupportedIcon />
+                                                )}
                                             </TableCell>
                                             <TableCell align="left">
                                                 {row.name}

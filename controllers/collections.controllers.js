@@ -24,6 +24,15 @@ module.exports.createCollection = async (req, res) => {
     }
 }
 
+module.exports.updateCollection2 = async (req, res) => {
+    const { name, description, theme } = req.body
+    await Collection.updateOne(
+        { _id: req.params.id },
+        { name, description, theme, image: req.file ? req.file.path : '' }
+    )
+    res.json({ message: `Item ${req.params.id} was updated!` })
+}
+
 module.exports.createItem = async (req, res) => {
     try {
         const { collectionId, name, tags, ...rest } = req.body
@@ -43,6 +52,26 @@ module.exports.createItem = async (req, res) => {
             request = { ...request, ...savedItem.additionalFields }
         }
         res.status(201).json(request)
+    } catch (error) {
+        res.status(500).json({
+            message: 'Что-то пошло не так, попробуйте снова',
+        })
+    }
+}
+
+module.exports.deleteItem = async (req, res) => {
+    try {
+        const item = await Item.findOne({ _id: req.params.id })
+        const collection = await Collection.findOne({
+            _id: item.collectionOwner,
+        })
+
+        if (collection.owner.toString() !== req.user.userId.toString()) {
+            throw new Error({ message: 'Вам не пренадлежит данная коллекция' })
+        }
+
+        await Item.deleteOne({ _id: req.params.id })
+        res.json({ message: `Item ${req.params.id} was deleted!` })
     } catch (error) {
         res.status(500).json({
             message: 'Что-то пошло не так, попробуйте снова',

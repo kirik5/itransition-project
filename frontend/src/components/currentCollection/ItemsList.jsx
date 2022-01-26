@@ -17,11 +17,12 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 
-const ItemsList = ({ items, fieldsTypes }) => {
+const ItemsList = ({ items, fieldsTypes, deleteItem }) => {
     const [order, setOrder] = React.useState('asc')
     const [orderBy, setOrderBy] = React.useState('name')
-    const [page, setPage] = React.useState(0)
+
     const [rowsPerPage, setRowsPerPage] = React.useState(5)
+    const [page, setPage] = React.useState(0)
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc'
@@ -31,6 +32,13 @@ const ItemsList = ({ items, fieldsTypes }) => {
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage)
+    }
+
+    const handleDeleteItem = itemId => () => {
+        if (items.length - 1 === page * rowsPerPage) {
+            setPage(prev => prev - 1)
+        }
+        deleteItem(itemId)()
     }
 
     const handleChangeRowsPerPage = event => {
@@ -148,11 +156,9 @@ const ItemsList = ({ items, fieldsTypes }) => {
 
                                             <TableCell align="center">
                                                 <IconButton
-                                                    onClick={() =>
-                                                        console.log(
-                                                            'delete item'
-                                                        )
-                                                    }
+                                                    onClick={handleDeleteItem(
+                                                        row.id
+                                                    )}
                                                 >
                                                     <DeleteIcon />
                                                 </IconButton>

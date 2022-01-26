@@ -23,7 +23,7 @@ const useRoutes = isAuthenticated => {
                     element={<CurrentCollectionPage />}
                 />
                 <Route
-                    path="/my-collections/:collectionId/change"
+                    path="/my-collections/change/:collectionId"
                     element={<ChangeCurrentCollectionPage />}
                 />
                 <Route path="" element={<Navigate to={'/my-collections'} />} />

@@ -10,19 +10,20 @@ const {
     getCollectionById,
     createItem,
     getCollectionItems,
+    deleteItem,
+    updateCollection2,
 } = require('../controllers/collections.controllers')
 const deleteImg = require('../middleware/deleteImg.middleware')
 
 const router = Router()
 
-// router.post('/update', async (req, res) => {
-//     console.log('update collection...')
-//     console.log(`req.body = `, req.body)
-// })
+router.patch('/update/:id', auth, upload.single('image'), updateCollection2)
 
 router.post('/create', auth, upload.single('image'), createCollection)
 
 router.post('/items/create', auth, createItem)
+
+router.delete('/items/delete/:id', auth, deleteItem)
 
 router.get('/items/:id', getCollectionItems)
 

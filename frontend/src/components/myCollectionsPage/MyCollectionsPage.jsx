@@ -5,6 +5,8 @@ import useHttp from '../../hooks/useHttp'
 import AuthContext from '../../context/AuthContext'
 import MyCollections from '../myCollections/MyCollections'
 import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import { useNavigate } from 'react-router-dom'
 
 const MyCollectionsPage = () => {
     const [myCollections, setMyCollections] = useState(null)
@@ -32,6 +34,12 @@ const MyCollectionsPage = () => {
         getMyCollections()
     }, [getMyCollections])
 
+    const navigate = useNavigate()
+
+    const handleAddCollection = () => {
+        navigate('/add-collection')
+    }
+
     return (
         <>
             {loading ? (
@@ -55,6 +63,9 @@ const MyCollectionsPage = () => {
                             Нет коллекций для отображения..(
                         </Typography>
                     )}
+                    <Button variant={'contained'} onClick={handleAddCollection}>
+                        Добавить коллекцию
+                    </Button>
                 </Box>
             )}
         </>
