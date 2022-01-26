@@ -6,6 +6,7 @@ import AllCollectionsPage from '../components/allCollectionsPage/AllCollectionsP
 import MyCollectionsPage from '../components/myCollectionsPage/MyCollectionsPage'
 import ChangeCurrentCollectionPage from '../components/changeCurrentCollectionPage/ChangeCurrentCollectionPage'
 import CurrentCollectionPage from '../components/currentCollectionPage/CurrentCollectionPage'
+import EditItemPage from '../components/editItemPage/EditItemPage'
 
 const useRoutes = isAuthenticated => {
     if (isAuthenticated) {
@@ -25,6 +26,10 @@ const useRoutes = isAuthenticated => {
                 <Route
                     path="/my-collections/change/:collectionId"
                     element={<ChangeCurrentCollectionPage />}
+                />
+                <Route
+                    path="/my-collections/items/edit/:itemId"
+                    element={<EditItemPage />}
                 />
                 <Route path="" element={<Navigate to={'/my-collections'} />} />
             </>

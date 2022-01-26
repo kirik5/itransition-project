@@ -16,6 +16,8 @@ import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
+import EditIcon from '@mui/icons-material/Edit'
+import { useNavigate } from 'react-router-dom'
 
 const ItemsList = ({ items, fieldsTypes, deleteItem }) => {
     const [order, setOrder] = React.useState('asc')
@@ -66,6 +68,13 @@ const ItemsList = ({ items, fieldsTypes, deleteItem }) => {
             }
         }),
         {
+            id: 'change',
+            numeric: false,
+            disablePadding: false,
+            label: '',
+            sorting: false,
+        },
+        {
             id: 'delete',
             numeric: false,
             disablePadding: false,
@@ -86,6 +95,12 @@ const ItemsList = ({ items, fieldsTypes, deleteItem }) => {
         return newItem
     })
 
+    const navigate = useNavigate()
+
+    const handleChangeItem = itemId => () => {
+        navigate(`/my-collections/items/edit/${itemId}`)
+    }
+
     return (
         <Box>
             <Typography
@@ -97,11 +112,7 @@ const ItemsList = ({ items, fieldsTypes, deleteItem }) => {
             </Typography>
             <Paper sx={{ width: '100%', mb: 2 }}>
                 <TableContainer>
-                    <Table
-                        sx={{ minWidth: 750 }}
-                        aria-labelledby="tableTitle"
-                        size={'medium'}
-                    >
+                    <Table aria-labelledby="tableTitle" size={'medium'}>
                         <EnhancedTableHead
                             order={order}
                             orderBy={orderBy}
@@ -153,7 +164,15 @@ const ItemsList = ({ items, fieldsTypes, deleteItem }) => {
                                                     </TableCell>
                                                 )
                                             })}
-
+                                            <TableCell align="center">
+                                                <IconButton
+                                                    onClick={handleChangeItem(
+                                                        row.id
+                                                    )}
+                                                >
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </TableCell>
                                             <TableCell align="center">
                                                 <IconButton
                                                     onClick={handleDeleteItem(
