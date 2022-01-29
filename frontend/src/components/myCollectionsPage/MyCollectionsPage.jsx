@@ -7,10 +7,12 @@ import MyCollections from '../myCollections/MyCollections'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom'
+import ColorModeContext from '../../context/ColorModeContext'
 
 const MyCollectionsPage = () => {
     const [myCollections, setMyCollections] = useState(null)
     const auth = useContext(AuthContext)
+    const { setMode } = useContext(ColorModeContext)
 
     const { request, loading } = useHttp()
 
@@ -26,13 +28,25 @@ const MyCollectionsPage = () => {
             )
             setMyCollections(myCollections)
         } catch (error) {}
-    }, [request, auth.token, setMyCollections])
+    }, [])
 
     const setFilteredCollections = filtered => setMyCollections(filtered)
 
     useEffect(() => {
         getMyCollections()
-    }, [getMyCollections])
+        return () => {
+            setMyCollections(null)
+        }
+    }, [getMyCollections, setMyCollections])
+
+    useEffect(async () => {
+        try {
+            const config = await request('/api/config', 'GET', null, {
+                Authorization: `Bearer ${auth.token}`,
+            })
+            setMode(config.mode)
+        } catch (error) {}
+    }, [auth.token, setMode])
 
     const navigate = useNavigate()
 
@@ -51,6 +65,8 @@ const MyCollectionsPage = () => {
                         maxWidth: '1200px',
                         margin: '0 auto',
                         padding: '10px',
+                        bgcolor: 'background.default',
+                        color: 'text.primary',
                     }}
                 >
                     {myCollections?.length ? (

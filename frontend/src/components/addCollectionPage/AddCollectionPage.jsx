@@ -5,6 +5,7 @@ import AuthContext from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import AdditionalFields from '../addCollection/AdditionalFields'
 import MainFields from '../addCollection/MainFields'
+import { Container } from '@mui/material'
 
 const AddCollectionPage = () => {
     const [collectionTypes, setCollectionTypes] = useState(null)
@@ -99,23 +100,25 @@ const AddCollectionPage = () => {
                 noValidate
                 autoComplete="off"
             >
-                <MainFields
-                    name={fieldsValues.name}
-                    description={fieldsValues.description}
-                    theme={fieldsValues.theme}
-                    image={fieldsValues.image}
-                    imagePreview={fieldsValues.imagePreview}
-                    changeFieldValue={handleChangeFieldValue}
-                    collectionTypes={collectionTypes}
-                    isButtonCreateDisabled={isButtonCreateDisabled}
-                    setFieldsValues={setFieldsValues}
-                    createCollection={handleCreateCollection}
-                />
+                <Container>
+                    <MainFields
+                        name={fieldsValues.name}
+                        description={fieldsValues.description}
+                        theme={fieldsValues.theme}
+                        image={fieldsValues.image}
+                        imagePreview={fieldsValues.imagePreview}
+                        changeFieldValue={handleChangeFieldValue}
+                        collectionTypes={collectionTypes}
+                        isButtonCreateDisabled={isButtonCreateDisabled}
+                        setFieldsValues={setFieldsValues}
+                        createCollection={handleCreateCollection}
+                    />
+                    <AdditionalFields
+                        collectionFields={collectionFields}
+                        setCollectionFields={setCollectionFields}
+                    />
+                </Container>
             </Box>
-            <AdditionalFields
-                collectionFields={collectionFields}
-                setCollectionFields={setCollectionFields}
-            />
         </Box>
     )
 }

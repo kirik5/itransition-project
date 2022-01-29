@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Outlet } from 'react-router-dom'
-import { Box } from '@mui/material'
-import ButtonAppBar from '../appBar/ArrBar'
+import { Box, FormControlLabel, Switch } from '@mui/material'
+import ButtonAppBar from '../appBar/AppBar'
 import MenuDrawer from '../menuDrawer/MenuDrawer'
 import MenuList from '../menuList/MenuList'
+import ColorModeContext from '../../context/ColorModeContext'
 
 const HomePage = () => {
     const [isDrawerOpen, setDrawerOpen] = useState(false)
+    const colorMode = useContext(ColorModeContext)
 
     const handleDrawerClose = () => {
         setDrawerOpen(false)
@@ -20,7 +22,21 @@ const HomePage = () => {
         <>
             <Box
                 sx={{
+                    position: 'fixed',
+                    left: '0',
+                    top: '0',
+                    height: '100vh',
+                    width: '100vw',
+                    color: 'text.primary',
+                    bgcolor: 'background.default',
+                    zIndex: '-1',
+                }}
+            />
+            <Box
+                sx={{
                     boxSizing: 'border-box',
+                    color: 'text.primary',
+                    bgcolor: 'background.default',
                 }}
             >
                 <ButtonAppBar onDrawerOpen={handleDrawerOpen} />
@@ -28,6 +44,19 @@ const HomePage = () => {
             </Box>
             <MenuDrawer open={isDrawerOpen} onClose={handleDrawerClose}>
                 <MenuList onDrawerClose={handleDrawerClose} />
+                <FormControlLabel
+                    sx={{ marginTop: '20px', justifyContent: 'center' }}
+                    value="start"
+                    control={
+                        <Switch
+                            checked={colorMode.mode === 'dark'}
+                            onChange={colorMode.colorModeToggle}
+                            inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                    }
+                    label="Темная тема"
+                    labelPlacement="end"
+                />
             </MenuDrawer>
         </>
     )

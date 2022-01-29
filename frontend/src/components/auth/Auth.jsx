@@ -90,10 +90,9 @@ const Auth = () => {
         try {
             if (errors.email || errors.password) return
 
-            const data = await request('/api/auth/register', 'POST', {
+            await request('/api/auth/register', 'POST', {
                 ...form,
             })
-            console.log(data)
         } catch (error) {}
     }
 
@@ -104,7 +103,7 @@ const Auth = () => {
             const data = await request('/api/auth/login', 'POST', {
                 ...form,
             })
-            auth.login(data.token, data.userId)
+            auth.login(data.token, data.userId, data.email)
             navigate(-1)
         } catch (error) {}
     }

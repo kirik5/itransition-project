@@ -10,6 +10,7 @@ app.use(express.json())
 
 app.use('/api/auth', require('./routes/auth.routes'))
 app.use('/api/collections', require('./routes/collections.routes'))
+app.use('/api/config', require('./routes/config.routes'))
 
 if (process.env.NODE_ENV === 'production') {
     app.use('/', express.static(path.join(__dirname, 'frontend', 'build')))
