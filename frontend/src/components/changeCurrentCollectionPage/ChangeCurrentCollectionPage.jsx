@@ -43,11 +43,17 @@ const ChangeCurrentCollectionPage = () => {
         const isImageOld =
             fieldsValues.image === fieldsValues.imagePreview.slice(1)
         const isImageEmpty = fieldsValues.image === ''
+        const isImagePreviewEmpty = fieldsValues.imagePreview === ''
 
-        data.append(
-            'image',
-            isImageOld || isImageEmpty ? '' : fieldsValues.image
-        )
+        if (!isImageOld && !isImageEmpty && !isImagePreviewEmpty) {
+            console.log('add image to change')
+            data.append('image', fieldsValues.image)
+        }
+
+        if (isImageEmpty && isImagePreviewEmpty) {
+            console.log('delete image')
+            data.append('image', '')
+        }
 
         try {
             await requestImg(

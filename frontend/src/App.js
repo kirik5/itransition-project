@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
-// import NoMatch from './components/noMatch/NoMatch'
 import HomePage from './components/homePage/HomePage'
 import useRoutes from './hooks/useRoutes'
 import useAuth from './hooks/useAuth'
@@ -8,6 +7,7 @@ import AuthContext from './context/AuthContext'
 import ColorModeContext from './context/ColorModeContext'
 import Loader from './components/loader/Loader'
 import { createTheme, ThemeProvider } from '@mui/material'
+import useHttp from './hooks/useHttp'
 
 const App = () => {
     const { token, userId, login, logout, ready, email } = useAuth()
@@ -17,6 +17,7 @@ const App = () => {
     const colorModeToggle = useCallback(() => {
         setMode(prevMode => (prevMode === 'light' ? 'dark' : 'light'))
     }, [setMode])
+    const { request } = useHttp()
 
     const theme = useMemo(
         () =>
@@ -28,11 +29,18 @@ const App = () => {
         [mode]
     )
 
-    useEffect(() => {
+    useEffect(async () => {
         if (!token) {
             setMode('light')
+        } else {
+            try {
+                const config = await request('/api/config', 'GET', null, {
+                    Authorization: `Bearer ${token}`,
+                })
+                setMode(config.mode)
+            } catch (error) {}
         }
-    }, [token])
+    }, [token, setMode])
 
     return (
         <ColorModeContext.Provider value={{ colorModeToggle, mode, setMode }}>

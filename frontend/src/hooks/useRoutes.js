@@ -41,7 +41,6 @@ const useRoutes = isAuthenticated => {
         <>
             <Route path="" element={<Auth />} />
             <Route path="all-collections" element={<AllCollectionsPage />} />
-            {/*<Route path=":collectionId" element={<CurrentCollectionPage />} />*/}
             <Route path="*" element={<Navigate to={'/'} />} />
         </>
     )

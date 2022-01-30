@@ -1,6 +1,10 @@
 const Collection = require('../models/Collection')
 const User = require('../models/User')
 const Item = require('../models/Item')
+const fs = require('fs')
+const { promisify } = require('util')
+
+const unlinkAsync = promisify(fs.unlink)
 
 module.exports.createCollection = async (req, res) => {
     try {
@@ -31,20 +35,23 @@ module.exports.updateCollection = async (req, res) => {
         if (collection.owner.toString() !== req.user.userId.toString()) {
             throw new Error({ message: 'Вам не пренадлежит данная коллекция' })
         }
-        const { name, description, theme } = req.body
 
-        console.log('collection.image = ', collection.image)
-        let newValue = { name, description, theme }
+        let newValue = { ...req.body }
         if (req.file?.path) {
             newValue = { ...newValue, image: req.file.path }
+
+            if (collection.image) {
+                await unlinkAsync(collection.image)
+            }
+        }
+        if (req.body.image === '') {
+            newValue = { ...newValue, image: '' }
+            if (collection.image) {
+                await unlinkAsync(collection.image)
+            }
         }
 
-        console.log('newValue = ', newValue)
-
-        await Collection.updateOne(
-            { _id: req.params.id },
-            { name, description, theme, image: req.file ? req.file.path : '' }
-        )
+        await Collection.updateOne({ _id: req.params.id }, { ...newValue })
         res.json({ message: `Item ${req.params.id} was updated!` })
     } catch (error) {
         res.status(500).json({

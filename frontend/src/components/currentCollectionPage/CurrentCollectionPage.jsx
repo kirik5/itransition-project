@@ -12,7 +12,6 @@ const CurrentCollectionPage = () => {
     const { collectionId } = useParams()
     const auth = useContext(AuthContext)
     const { request, loading } = useHttp()
-
     const [collection, setCollection] = useState(null)
     const [fields, setFields] = useState(null)
     const [startFieldsValues, setStartFieldsValues] = useState(null)
@@ -156,7 +155,7 @@ const CurrentCollectionPage = () => {
                             saveNewItem={handleSaveNewItem}
                         />
                     )}
-                    {items?.length && (
+                    {!!items?.length && (
                         <ItemsList
                             items={items}
                             fieldsTypes={Object.keys(
