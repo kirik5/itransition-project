@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 // import NoMatch from './components/noMatch/NoMatch'
 import HomePage from './components/homePage/HomePage'
@@ -28,6 +28,12 @@ const App = () => {
         [mode]
     )
 
+    useEffect(() => {
+        if (!token) {
+            setMode('light')
+        }
+    }, [token])
+
     return (
         <ColorModeContext.Provider value={{ colorModeToggle, mode, setMode }}>
             <ThemeProvider theme={theme}>
@@ -47,7 +53,6 @@ const App = () => {
                         <Routes>
                             <Route path="/" element={<HomePage />}>
                                 {routes}
-                                {/*<Route path="*" element={<NoMatch />} />*/}
                             </Route>
                         </Routes>
                     )}

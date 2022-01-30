@@ -13,11 +13,8 @@ module.exports.getUserConfig = async (req, res) => {
 
 module.exports.updateUserConfig = async (req, res) => {
     try {
-        const config = await Config.updateOne(
-            { owner: req.user.userId },
-            { ...body }
-        )
-        res.json(config)
+        await Config.updateOne({ owner: req.user.userId }, { ...req.body })
+        res.json({ message: 'ok' })
     } catch (error) {
         res.status(500).json({
             message: 'Что-то пошло не так, попробуйте снова',

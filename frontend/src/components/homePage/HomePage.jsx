@@ -5,10 +5,14 @@ import ButtonAppBar from '../appBar/AppBar'
 import MenuDrawer from '../menuDrawer/MenuDrawer'
 import MenuList from '../menuList/MenuList'
 import ColorModeContext from '../../context/ColorModeContext'
+import useHttp from '../../hooks/useHttp'
+import AuthContext from '../../context/AuthContext'
 
 const HomePage = () => {
     const [isDrawerOpen, setDrawerOpen] = useState(false)
     const colorMode = useContext(ColorModeContext)
+    const auth = useContext(AuthContext)
+    const { request, loading } = useHttp()
 
     const handleDrawerClose = () => {
         setDrawerOpen(false)
@@ -16,6 +20,20 @@ const HomePage = () => {
 
     const handleDrawerOpen = () => {
         setDrawerOpen(true)
+    }
+
+    const handleChangeColorMode = async () => {
+        if (auth.token) {
+            await request(
+                '/api/config',
+                'PATCH',
+                { mode: colorMode.mode === 'dark' ? 'light' : 'dark' },
+                {
+                    Authorization: `Bearer ${auth.token}`,
+                }
+            )
+        }
+        colorMode.colorModeToggle()
     }
 
     return (
@@ -50,8 +68,9 @@ const HomePage = () => {
                     control={
                         <Switch
                             checked={colorMode.mode === 'dark'}
-                            onChange={colorMode.colorModeToggle}
+                            onChange={handleChangeColorMode}
                             inputProps={{ 'aria-label': 'controlled' }}
+                            disabled={loading}
                         />
                     }
                     label="Темная тема"

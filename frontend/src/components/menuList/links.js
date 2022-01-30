@@ -23,7 +23,7 @@ const links = {
         {
             icon: <LibraryBooksIcon />,
             title: 'Все коллекции',
-            link: '/add-collections',
+            link: '/all-collections',
         },
     ],
 }

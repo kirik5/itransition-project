@@ -32,6 +32,7 @@ const useRoutes = isAuthenticated => {
                     element={<EditItemPage />}
                 />
                 <Route path="" element={<Navigate to={'/my-collections'} />} />
+                <Route path="*" element={<Navigate to={'/'} />} />
             </>
         )
     }

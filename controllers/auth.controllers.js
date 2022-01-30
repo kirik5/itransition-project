@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator')
 const User = require('../models/User')
+const Config = require('../models/Config')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const config = require('config')
@@ -61,6 +62,8 @@ module.exports.register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 12)
         const user = new User({ email, password: hashedPassword })
         await user.save()
+        const userConfig = new Config({ mode: 'light', owner: user._id })
+        await userConfig.save()
         res.status(201).json({ message: 'Пользователь зарегистрирован!' })
     } catch (error) {
         res.status(500).json({ message: 'Что-то пошло не так!' })
